@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>H_qssClass</class>
+ <widget class="QMainWindow" name="H_qssClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>H_qss</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#pushButtonShake
+{
+	background: rgb(191,225,191);
+}
+
+#pushButtonShake:hover
+{
+	background: rgb(191,225,0);
+	animation: shake 800ms ease-in-out;
+	widget-animation-duration: 1000;
+}
+
+
+#widgetShake
+{
+	background: rgb(191,225,191);
+}
+
+#widgetShake:hover
+{
+	background: rgb(191,225,0);
+	animation: shake 800ms ease-in-out;
+	widget-animation-duration: 1000;
+}</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QWidget" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>30</y>
+      <width>120</width>
+      <height>90</height>
+     </rect>
+    </property>
+    <widget class="QPushButton" name="pushButtonShake">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>0</y>
+       <width>100</width>
+       <height>90</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>设置按键抖动</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="vColorfulBtn" name="pushButtonText">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>30</y>
+      <width>191</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">
+background-color: rgba(35,35,35, 50%);
+font: 87 12pt &quot;Arial Black&quot;;
+color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0,
+	stop:0 rgba(255, 0, 0, 255), 
+	stop:0.166 rgba(255, 255, 0, 255), 
+	stop:0.333 rgba(0, 255, 0, 255), 
+	stop:0.5 rgba(0, 255, 255, 255), 
+	stop:0.666 rgba(0, 0, 255, 255), 
+	stop:0.833 rgba(255, 0, 255, 255), 
+	stop:1 rgba(255, 0, 0, 255));
+</string>
+    </property>
+    <property name="text">
+     <string>----多彩字体Btn----</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_color">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>200</y>
+      <width>231</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>多彩字体Label</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>600</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>vColorfulBtn</class>
+   <extends>QPushButton</extends>
+   <header>vcolorfulbtn.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="H_qss.qrc"/>
+ </resources>
+ <connections/>
+</ui>
