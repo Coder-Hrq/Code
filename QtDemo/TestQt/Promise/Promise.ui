@@ -27,6 +27,19 @@
      <string>异步测试</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButtonLoad">
+    <property name="geometry">
+     <rect>
+      <x>150</x>
+      <y>30</y>
+      <width>75</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>异步下载</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
