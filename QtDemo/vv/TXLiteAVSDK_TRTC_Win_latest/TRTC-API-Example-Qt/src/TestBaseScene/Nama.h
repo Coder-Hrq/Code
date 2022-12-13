@@ -2,7 +2,9 @@
 #define NAMA_H
 
 #include <map>
+#include <vector>
 #include <opencv2/opencv.hpp>
+#include <QString>
 
 using namespace std;
 
@@ -34,6 +36,7 @@ public:
     //当前调用道具bundle
     int m_bundleCurrent = 0;
     vector<int> m_renderList;
+    list<int> m_cacheList;
 public:
     void InitOpenGL();
     bool CheckGLContext();
@@ -53,6 +56,11 @@ public:
     void getPresentFrame(const cv::Mat &frame);
     //设置美颜参数
     void SetBeautyParam();
+    bool addBundles(const QStringList &bundleNames);
+    void clearBundle();
+
+private:
+    map<QString, vector<char>>         m_mapBunbleData;
 };
 
 #endif // NAMA_H

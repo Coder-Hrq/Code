@@ -167,11 +167,13 @@ using namespace std;
 TestBaseScene::TestBaseScene(std::shared_ptr<TestUserVideoGroup> testUserVideoGroup)
     : test_user_video_group_(testUserVideoGroup){
     getTRTCShareInstance()->addCallback(this);
-    ITRTCVideoFrameCallback *vTRTCVideoFrameCallback = MainWindowGl::getInstance();
-    MainWindowGl::getInstance()->show();
+    VTRTCVideoFrameCallback *vTRTCVideoFrameCallback = new VTRTCVideoFrameCallback();
     //设置第三方美颜的视频数据回调
     int ret = getTRTCShareInstance()->setLocalVideoProcessCallback(TRTCVideoPixelFormat_I420, TRTCVideoBufferType_Buffer, vTRTCVideoFrameCallback);
     qDebug() << ret;
+    QStringList bundles;
+    bundles << "./items/ARMask/xiongmao.bundle";
+    vTRTCVideoFrameCallback->addBundles(bundles);
 }
 
 TestBaseScene::~TestBaseScene() {

@@ -2,11 +2,13 @@
 #include "Nama.h"
 #include <CNamaSDK.h>			//nama SDK
 #include <authpack.h>			//nama SDK
-#include <vector>
 #include "iostream"
 #include <Windows.h>
 #include <gl\GL.h>
 #include <QStringList>
+#include <QDebug>
+
+#define FACE_UTILITY_LOG (qInfo().noquote() << "[face_utility]")
 
 PIXELFORMATDESCRIPTOR pfd = {
     sizeof(PIXELFORMATDESCRIPTOR),
@@ -28,18 +30,21 @@ PIXELFORMATDESCRIPTOR pfd = {
 
 void Nama::InitOpenGL()
 {
-    HWND hw = CreateWindowExA(
-                0, "EDIT", "", ES_READONLY,
-                0, 0, 1, 1,
-                NULL, NULL,
-                GetModuleHandleA(NULL), NULL);
-    HDC hgldc = GetDC(hw);
-    int spf = ChoosePixelFormat(hgldc, &pfd);
-    int ret = SetPixelFormat(hgldc, spf, &pfd);
-    HGLRC hglrc = wglCreateContext(hgldc);
-    wglMakeCurrent(hgldc, hglrc);
-    printf("hw=%08x hgldc=%08x spf=%d ret=%d hglrc=%08x\n",
-           hw, hgldc, spf, ret, hglrc);
+    if (!CheckGLContext())
+    {
+        HWND hw = CreateWindowExA(
+            0, "EDIT", "", ES_READONLY,
+            0, 0, 1, 1,
+            NULL, NULL,
+            GetModuleHandleA(NULL), NULL);
+        HDC hgldc = GetDC(hw);
+        int spf = ChoosePixelFormat(hgldc, &pfd);
+        int ret = SetPixelFormat(hgldc, spf, &pfd);
+        HGLRC hglrc = wglCreateContext(hgldc);
+        wglMakeCurrent(hgldc, hglrc);
+        FACE_UTILITY_LOG << QString("hw=%1 hgldc=%2 spf=%3 ret=%4 hglrc=%5").arg((int)hw).arg((int)hgldc).arg(spf).arg(ret).arg((int)hglrc);
+    }
+
 }
 
 bool Nama::CheckGLContext()
@@ -50,7 +55,12 @@ bool Nama::CheckGLContext()
     add2 = (int)wglGetProcAddress("glGenFramebuffersEXT");
     add3 = (int)wglGetProcAddress("glGenFramebuffers");
     const GLubyte* OpenGLVersion = glGetString(GL_VERSION);
-    printf("gl ver test (%s:%d):version:%s  %08x %08x %08x %08x\n", __FILE__, __LINE__, OpenGLVersion, add0, add1, add2, add3);
+    static bool bFirst = true;
+    if (bFirst)
+    {
+        FACE_UTILITY_LOG << QString("gl ver :version:%1  %2 %3 %4 %5").arg(QString::fromLatin1((char*)OpenGLVersion)).arg(add0).arg(add1).arg(add2).arg(add3);
+        bFirst = false;
+    }
     return add0 | add1 | add2 | add3;
 }
 
@@ -63,6 +73,7 @@ Nama::~Nama()
     fuDestroyAllItems();
     fuOnDeviceLost();
     fuDestroyLibData();
+    m_mapBunbleData.clear();
 }
 
 bool Nama::LoadBundle(const string &filepath, vector<char> &data)
@@ -104,29 +115,19 @@ void Nama::InitNama()
     //setup without license, only render 1000 frames.
     //fuSetup(nullptr, 0, nullptr, nullptr, 0);
 
-    printf("Nama version:%s \n", fuGetVersion());
+    FACE_UTILITY_LOG << "Nama version:" << fuGetVersion();
 
     //加载AI能力
     vector<char> ai_model_data;
-    if (false == LoadBundle("./assets/model/ai_face_processor_pc.bundle", ai_model_data))
+    if (false == LoadBundle("./model/ai_face_processor_pc.bundle", ai_model_data))
     {
-        cout << "Error:fail load faceprocessor model" << endl;
+        FACE_UTILITY_LOG << "Error:fail load faceprocessor model";
     }
     fuLoadAIModelFromPackage(reinterpret_cast<float*>(&ai_model_data[0]), ai_model_data.size(), FUAITYPE::FUAITYPE_FACEPROCESSOR);
 
 
     m_ModuleCode = fuGetModuleCode(0);
     m_ModuleCode1 = fuGetModuleCode(1);
-    {
-        vector<char> propData;
-        if (false == LoadBundle("./assets/items/ARMask/xiongmao.bundle", propData))
-        {
-            cout << "load face beautification data failed." << endl;
-        }
-        cout << "load face beautification data." << endl;
-        //加载道具包，使其可以在主运行接口中被执行。一个道具包可能是一个功能模块或者多个功能模块的集合，加载道具包可以在流水线中激活对应的功能模块，在同一套SDK调用逻辑中实现即插即用。
-        m_BeautyHandles = fuCreateItemFromPackage(&propData[0], propData.size());
-    }
     float fValue = 0.5f;
     fuSetFaceTrackParam((void*)"mouth_expression_more_flexible", &fValue);
 
@@ -138,8 +139,8 @@ void Nama::InitNama()
 
 void Nama::RenderDefNama()
 {
-    m_renderList.clear();
-    m_renderList.push_back(m_BeautyHandles);
+    InitOpenGL();
+    std::unique_lock<std::mutex> lock(m_frameMutex);
 #ifdef SynchronizingCamera
     if(m_getNewFrame){
 #endif
@@ -151,13 +152,30 @@ void Nama::RenderDefNama()
         //这里直接处理成纹理,opengl直接调用m_texID纹理id绘制,更快
         //֧FU_FORMAT_BGRA_BUFFER  FU_FORMAT_NV21_BUFFER FU_FORMAT_I420_BUFFER FU_FORMAT_RGBA_BUFFER
         int face = fuIsTracking();
-        printf("fuIsTracking----------%d-------------", face);
         if (m_frame.cols != 0)
-        fuRender(FU_FORMAT_I420_BUFFER, reinterpret_cast<int*>(m_frame.data), FU_FORMAT_I420_BUFFER, reinterpret_cast<int*>(m_frame.data),
-                 m_frame.cols, m_frame.rows, m_FrameID++, m_renderList.data(),
-                 m_renderList.size(), NAMA_RENDER_FEATURE_FULL, NULL);
+        {
+            for (auto it = m_renderList.begin(); it != m_renderList.end(); ++it)
+            {
+                auto result = fuItemGetParamd(*it, "hasFinish");
+                if (result > 0.001)
+                {
+                    m_renderList.erase(it);
+                    fuDestroyItem(*it);
+                    break;
+                }
+            }
+            if (m_renderList.size() == 0 && m_cacheList.size() > 0)
+            {
+                m_renderList.push_back(m_cacheList.back());
+                m_cacheList.pop_back();
+            }
 
-        cv::imwrite("D:/test.png", m_frame);
+            fuRender(FU_FORMAT_BGRA_BUFFER, reinterpret_cast<int*>(m_frame.data), FU_FORMAT_BGRA_BUFFER, reinterpret_cast<int*>(m_frame.data),
+                m_frame.cols, m_frame.rows, m_FrameID++, m_renderList.data(),
+                m_renderList.size(), NAMA_RENDER_FEATURE_FULL, NULL);
+
+            cv::cvtColor(m_frame, m_frame, cv::COLOR_BGRA2YUV_I420);
+        }
 
 #ifdef SynchronizingCamera
     }
@@ -167,7 +185,7 @@ void Nama::RenderDefNama()
 #endif
     if (fuGetSystemError())
     {
-        printf("%s \n", fuGetSystemErrorString(fuGetSystemError()));
+        FACE_UTILITY_LOG << "error" <<fuGetSystemErrorString(fuGetSystemError());
     }
 }
 
@@ -201,5 +219,33 @@ void Nama::SetBeautyParam()
     for(int i = 0; i < beautySkin.size(); i++){
         itemSetParamd(m_BeautyHandles, beautySkin.at(i).toStdString(), beautySkinParam.at(i).toDouble()/100);
     }
+}
+
+bool Nama::addBundles(const QStringList &bundleNames)
+{
+    for (auto bundleName : bundleNames)
+    {
+        auto filepath = bundleName.toStdString();
+        vector<char> propData;
+
+        if (false == LoadBundle(filepath, propData))
+        {
+            FACE_UTILITY_LOG << "LoadBundle failed:" << QString::fromStdString(filepath);
+            break;
+        }
+        FACE_UTILITY_LOG << "LoadBundle:" << QString::fromStdString(filepath);
+        //加载道具包，使其可以在主运行接口中被执行。一个道具包可能是一个功能模块或者多个功能模块的集合，加载道具包可以在流水线中激活对应的功能模块，在同一套SDK调用逻辑中实现即插即用。
+        auto itemId = fuCreateItemFromPackage(&propData[0], propData.size());
+        std::unique_lock<std::mutex> lock(m_frameMutex);
+        m_cacheList.push_front(itemId);
+    }
+    return true;
+}
+
+void Nama::clearBundle()
+{
+    std::unique_lock<std::mutex> lock(m_frameMutex);
+    m_cacheList.clear();
+    m_renderList.clear();
 }
 

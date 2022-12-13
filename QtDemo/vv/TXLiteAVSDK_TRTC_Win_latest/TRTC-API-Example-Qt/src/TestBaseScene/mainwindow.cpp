@@ -1,88 +1,77 @@
 ﻿#include "mainwindow.h"
 
-MainWindowGl* MainWindowGl::instance_ = nullptr;
-
-MainWindowGl* MainWindowGl::getInstance()
+VTRTCVideoFrameCallback::VTRTCVideoFrameCallback(QObject *parent)
+    : QObject(parent)
 {
-    if (instance_ == nullptr)
-    {
-        instance_ = new MainWindowGl();
-    }
-    return instance_;
+    m_nama = new Nama();
+    m_nama->InitNama();
+}
+
+VTRTCVideoFrameCallback::~VTRTCVideoFrameCallback()
+{
 }
 
 
-int MainWindowGl::onProcessVideoFrame(TRTCVideoFrame* srcFrame, TRTCVideoFrame* dstFrame)
+
+int VTRTCVideoFrameCallback::onProcessVideoFrame(TRTCVideoFrame* srcFrame, TRTCVideoFrame* dstFrame)
 {
-    memcpy(dstFrame->data, srcFrame->data, srcFrame->length);
+    //memcpy(dstFrame->data, srcFrame->data, srcFrame->length);
     cv::Mat mat = cv::Mat(srcFrame->height * 3 / 2, srcFrame->width, CV_8UC1);
     memcpy(mat.data, srcFrame->data, srcFrame->length);
     cv::cvtColor(mat, mat, cv::COLOR_YUV2BGRA_IYUV);
-    m_nama->getPresentFrame(mat);
+    cv::flip(mat, mat, 1);
+    m_nama->getPresentFrame(mat.clone());
+    m_nama->RenderDefNama();
+    memcpy(dstFrame->data, m_nama->m_frame.data, srcFrame->length);
     return 0;
 }
 
-MainWindowGl::MainWindowGl(QWidget *parent)
-    : QOpenGLWidget(parent)
+bool VTRTCVideoFrameCallback::addBundles(const QStringList &bundleNames)
 {
-    m_nama = new Nama();
+    //3秒内不进行添加，缓存起来，一起添加
+    if (nullptr != m_nama)
+    {
+        if (m_bFirst)
+        {
+            m_bFirst = false;
+            m_lastQDateTime = QDateTime::currentDateTime();
+            m_nama->addBundles(bundleNames);
+        }
+        else
+        {
+            m_cacheList += bundleNames;
+            QPointer<QObject> obj(this);
+            m_msecs = m_lastQDateTime.msecsTo(QDateTime::currentDateTime());
+            if (m_msecs > 3000)
+            {
+                m_nama->addBundles(m_cacheList);
+                m_cacheList.clear();
+                m_lastQDateTime == QDateTime::currentDateTime();
+            }
+            else
+            {
+                QTimer::singleShot(3000, [=]() {
+                    if (obj.isNull()) return;
+
+                    if (m_cacheList.isEmpty()) return;
+
+                    m_nama->addBundles(m_cacheList);
+                    m_cacheList.clear();
+                    m_lastQDateTime == QDateTime::currentDateTime();
+                });
+            }
+        }
+
+    }
+    return true;
 }
 
-MainWindowGl::~MainWindowGl()
+void VTRTCVideoFrameCallback::clearBundle()
 {
+    if (nullptr != m_nama)
+    {
+        m_cacheList.clear();
+        m_bFirst = true;
+        return m_nama->clearBundle();
+    }
 }
-
-void MainWindowGl::initializeGL()
-{
-    initializeOpenGLFunctions();
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    m_nama->InitNama();
-    m_nama->SetBeautyParam();
-}
-
-void MainWindowGl::resizeGL(int w, int h)
-{
-
-}
-
-void MainWindowGl::paintGL()
-{
-    //glClear(GL_COLOR_BUFFER_BIT);
-    //std::unique_lock<std::mutex> lock(m_nama->m_frameMutex);
-    //QOpenGLFunctions glFuncs(QOpenGLContext::currentContext());
-    //glFuncs.glUseProgram(0);
-    ////这里长宽864/486对应qml中CameraDisplay的长宽
-    //int width = m_camera->m_FrameWidth;
-    //int height = m_camera->m_FrameHeight;
-    //glViewport(0, 0, width, height);
-    //glMatrixMode(GL_PROJECTION);//指定矩阵为投影矩阵
-    //glLoadIdentity();           //重置为单位矩阵
-    //glOrtho(0, width, 0, height, 0, 1000);//设置剪裁区域
-    //glMatrixMode(GL_MODELVIEW);
-    //glLoadIdentity();
-    //glDisable(GL_DEPTH_TEST);
-    m_nama->RenderDefNama();
-    //glClearColor(1.0, 1.0, 1.0, 1.0);
-    //glClear(GL_COLOR_BUFFER_BIT);
-    //glEnable(GL_TEXTURE_2D);
-    //glBindTexture(GL_TEXTURE_2D, m_nama->m_texID);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    //glPushMatrix();
-    //glBegin(GL_QUADS);
-    //glColor4f(1.f, 1.f, 1.f, 1.f);
-    ////输出图纹理像需要垂直翻转
-    //glTexCoord2f(0.f, 0.f);
-    //glVertex3f(0.f, 0.f, 0.f);//左上角
-    //glTexCoord2f(1.f, 0.f);
-    //glVertex3f(width, 0.f, 0.f);//右上角
-    //glTexCoord2f(1.f, 1.f);
-    //glVertex3f(width, height, 0.f);//右下角
-    //glTexCoord2f(0.f, 1.f);
-    //glVertex3f(0.f, height, 0.f);//左下角
-    //glEnd();
-    //glPopMatrix();
-    //update();
-}
-
-

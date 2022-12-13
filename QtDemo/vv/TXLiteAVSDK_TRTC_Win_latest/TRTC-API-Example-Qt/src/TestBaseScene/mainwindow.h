@@ -1,30 +1,31 @@
 ﻿#ifndef MAINWINDOWGL_H
 #define MAINWINDOWGL_H
 
-#include <QOpenGLWidget>
-#include <QOpenGLFunctions>
+#include <QDateTime>
+#include <QPointer>
+#include <QTimer>
 #include <Nama.h>
 #include "TRTCCloudCallback.h"
 
-class MainWindowGl : public QOpenGLWidget, protected QOpenGLFunctions  , public ITRTCVideoFrameCallback
+class VTRTCVideoFrameCallback : public QObject, public ITRTCVideoFrameCallback
 {
     Q_OBJECT
-
 public:
-    MainWindowGl(QWidget *parent = nullptr);
-    ~MainWindowGl();
-    static MainWindowGl* getInstance();
-    Nama *m_nama;
+    VTRTCVideoFrameCallback(QObject *parent = nullptr);
+    ~VTRTCVideoFrameCallback();
 
 public:
     int onProcessVideoFrame(TRTCVideoFrame* srcFrame, TRTCVideoFrame* dstFrame);
 
-protected:
-      void initializeGL();
-      void resizeGL(int w, int h);
-      void paintGL();
+public:
+    bool addBundles(const QStringList &bundleNames);
+    void clearBundle();
+
 private:
-    //单例模式
-    static MainWindowGl *instance_;
+    Nama *m_nama;
+    QStringList m_cacheList;
+    QDateTime   m_lastQDateTime;
+    bool        m_bFirst = true;
+    qint64      m_msecs;
 };
 #endif // MAINWINDOW_H
