@@ -95,11 +95,15 @@
     </QtMoc>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <QtMoc Include="WebConnect.h" />
     <QtRcc Include="WebEngine.qrc" />
     <QtUic Include="WebEngine.ui" />
     <QtMoc Include="WebEngine.h" />
+    <ClCompile Include="HWebView.cpp" />
+    <ClCompile Include="WebConnect.cpp" />
     <ClCompile Include="WebEngine.cpp" />
     <ClCompile Include="main.cpp" />
+    <QtMoc Include="HWebView.h" />
     <ClInclude Include="stdafx.h" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'">Create</PrecompiledHeader>

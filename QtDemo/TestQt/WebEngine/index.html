@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <script type="text/javascript" src="qrc:///qtwebchannel/qwebchannel.js"></script>
+        <script type="text/javascript">
+            //BEGIN SETUP
+            function output(message) {
+                var output = document.getElementById("output");
+                output.innerHTML = output.innerHTML + message + "\n";
+            }
+            window.onload = function() {
+				var webObj;
+
+				// 创建Webchannel，与C++端建立连接
+				new QWebChannel(qt.webChannelTransport, function (channel) {
+
+					// 获取类的对象
+					webObj = channel.objects.content;
+					
+					//reveive from Qt
+					webObj.CppToJs.connect(function(arg){
+						output("reveive from Qt: " + arg);
+					});
+
+				});
+			
+				//send to Qt
+				document.getElementById("send").onclick = function() {
+					var input = document.getElementById("input");
+					var text = input.value;
+					if (!text) {
+						return;
+					}
+
+					output("Sent to Qt: " + text);
+					webObj.JsToCpp(text);
+				}	
+				
+            }			
+            //END SETUP
+        </script>
+        <style type="text/css">
+            html {
+                height: 100%;
+                width: 100%;
+            }
+            #input {
+                width: 400px;
+                margin: 0 10px 0 0;
+            }
+            #send {
+                width: 90px;
+                margin: 0;
+            }
+            #output {
+                width: 500px;
+                height: 300px;
+            }
+        </style>
+    </head>
+    <body>
+        <textarea id="output"></textarea><br />
+        <input id="input" /><input type="submit" id="send" value="Send" onclick="javascript:click();" />
+    </body>
+</html>

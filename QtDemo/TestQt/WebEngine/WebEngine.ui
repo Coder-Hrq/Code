@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
+    <width>755</width>
     <height>457</height>
    </rect>
   </property>
@@ -87,7 +87,7 @@
           </rect>
          </property>
          <property name="text">
-          <string>https://html5test.com</string>
+          <string>https://html5test.com  file:///./index.html</string>
          </property>
         </widget>
         <widget class="QPushButton" name="pushButton_enter">
@@ -129,6 +129,19 @@
           <string>D</string>
          </property>
         </widget>
+        <widget class="QPushButton" name="pushButton_sendJs">
+         <property name="geometry">
+          <rect>
+           <x>520</x>
+           <y>20</y>
+           <width>75</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Qt SendJs</string>
+         </property>
+        </widget>
        </widget>
       </item>
       <item>
@@ -143,7 +156,7 @@
          <item row="0" column="0">
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="QWebEngineView" name="webEngineView">
+            <widget class="HWebView" name="webEngineView">
              <property name="url">
               <url>
                <string>about:blank</string>
@@ -176,6 +189,12 @@
    <class>QWebEngineView</class>
    <extends>QWidget</extends>
    <header location="global">QtWebEngineWidgets/QWebEngineView</header>
+  </customwidget>
+  <customwidget>
+   <class>HWebView</class>
+   <extends>QWebEngineView</extends>
+   <header>HWebView.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>
