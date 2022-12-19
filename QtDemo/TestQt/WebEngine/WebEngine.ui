@@ -87,7 +87,7 @@
           </rect>
          </property>
          <property name="text">
-          <string>https://html5test.com  file:///./index.html</string>
+          <string>file:///./web/vue/index001.html</string>
          </property>
         </widget>
         <widget class="QPushButton" name="pushButton_enter">
