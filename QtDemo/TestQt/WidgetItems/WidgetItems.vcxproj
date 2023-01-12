@@ -86,15 +86,40 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <QtRcc Include="WidgetItems.qrc" />
+    <QtUic Include="VCheckIdWidget.ui" />
+    <QtUic Include="VCheckMsgWidget.ui" />
+    <QtUic Include="VCheckOrderWidget.ui" />
     <QtUic Include="vColorfulLabel.ui" />
+    <QtUic Include="VSafeChatModeWidget.ui" />
+    <QtUic Include="VToast.ui" />
     <QtUic Include="WidgetItems.ui" />
     <QtMoc Include="WidgetItems.h" />
+    <ClCompile Include="VCheckIdWidget.cpp" />
+    <ClCompile Include="VCheckMsgWidget.cpp" />
+    <ClCompile Include="VCheckOrderWidget.cpp" />
     <ClCompile Include="vColorfulLabel.cpp" />
+    <ClCompile Include="VSafeChatModeWidget.cpp" />
+    <ClCompile Include="VToast.cpp" />
     <ClCompile Include="WidgetItems.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="vColorfulLabel.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="VSafeChatModeWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="VCheckMsgWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="VCheckIdWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="VCheckOrderWidget.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="VToast.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

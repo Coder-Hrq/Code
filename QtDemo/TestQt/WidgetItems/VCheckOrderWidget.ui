@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>VCheckOrderWidget</class>
+ <widget class="QWidget" name="VCheckOrderWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>318</width>
+    <height>375</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>VCheckMsgWidget</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#widget_bg
+{
+	background: #373E4C;
+	border-radius: 6px;
+}
+
+#label_title
+{
+	color: white;
+	font-weight: 600;
+	font: 20px &quot;黑体&quot;;
+}
+
+#lineEdit_order1
+,#lineEdit_order2
+,#lineEdit_order3
+{
+	border-radius: 18px;
+	background: rgba(255,255, 255, 0.1);
+	font-size: 12px;
+	font-weight: 500;
+	color: white;
+	padding-left: 16px;
+}
+
+#pushButton_check
+{
+	background: rgb(14, 242, 209);
+	border-radius: 18px;
+	font: 14px;
+	font-weight: 600;
+}
+
+#pushButton_code
+{
+	background: rgb(14, 242, 209);
+	border-radius: 9px;
+	font: 12px;
+	font-weight: 400;
+}
+
+#label_toast
+{
+	color: rgba(255, 255, 255);
+	background: rgba(0, 0, 0, 0.6);
+	border-radius: 12px;
+	font-weight: 400;
+}
+</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <item row="0" column="0">
+    <widget class="QWidget" name="widget_bg" native="true">
+     <widget class="QPushButton" name="pushButton_close">
+      <property name="geometry">
+       <rect>
+        <x>286</x>
+        <y>16</y>
+        <width>16</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_back">
+      <property name="geometry">
+       <rect>
+        <x>16</x>
+        <y>25</y>
+        <width>18</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_check">
+      <property name="geometry">
+       <rect>
+        <x>35</x>
+        <y>303</y>
+        <width>248</width>
+        <height>36</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>开始验证</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_order1">
+      <property name="geometry">
+       <rect>
+        <x>35</x>
+        <y>135</y>
+        <width>248</width>
+        <height>36</height>
+       </rect>
+      </property>
+      <property name="placeholderText">
+       <string>历史订单1的记录</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_title">
+      <property name="geometry">
+       <rect>
+        <x>99</x>
+        <y>20</y>
+        <width>120</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>历史订单认证</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_toast">
+      <property name="geometry">
+       <rect>
+        <x>119</x>
+        <y>176</y>
+        <width>80</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>核实成功</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_txt">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>72</y>
+        <width>278</width>
+        <height>39</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p style=&quot;font-size: 13px;font-weight: 400;color: #FFFFFF;line-height: 20px;&quot;&gt;系统将根据你的历史订单信息进行账号核实，请输入&lt;span style=&quot; color:#0EF2D1;&quot;&gt;三笔历史订单付款日期&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_order2">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>191</y>
+        <width>248</width>
+        <height>36</height>
+       </rect>
+      </property>
+      <property name="placeholderText">
+       <string>历史订单2的记录</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_order3">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>247</y>
+        <width>248</width>
+        <height>36</height>
+       </rect>
+      </property>
+      <property name="placeholderText">
+       <string>历史订单3的记录</string>
+      </property>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

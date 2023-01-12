@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>VCheckMsgWidget</class>
+ <widget class="QWidget" name="VCheckMsgWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>315</width>
+    <height>256</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>VCheckMsgWidget</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">#widget_bg
+{
+	background: #373E4C;
+	border-radius: 6px;
+}
+
+#label_title
+{
+	color: white;
+	font-weight: 600;
+	font: 20px &quot;黑体&quot;;
+}
+
+#lineEdit_phone
+,#lineEdit_code
+{
+	border-radius: 18px;
+	background: rgba(255,255, 255, 0.1);
+	font-size: 12px;
+	font-weight: 500;
+	color: white;
+	padding-left: 16px;
+}
+
+#pushButton_check
+{
+	background: rgb(14, 242, 209);
+	border-radius: 18px;
+	font: 14px;
+	font-weight: 600;
+}
+
+#pushButton_code
+{
+	background: rgb(14, 242, 209);
+	border-radius: 9px;
+	font: 12px;
+	font-weight: 400;
+}
+
+#label_toast
+{
+	color: rgba(255, 255, 255);
+	background: rgba(0, 0, 0, 0.6);
+	border-radius: 12px;
+	font-weight: 400;
+}
+</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <item row="0" column="0">
+    <widget class="QWidget" name="widget_bg" native="true">
+     <widget class="QPushButton" name="pushButton_close">
+      <property name="geometry">
+       <rect>
+        <x>286</x>
+        <y>16</y>
+        <width>16</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_back">
+      <property name="geometry">
+       <rect>
+        <x>16</x>
+        <y>25</y>
+        <width>18</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_check">
+      <property name="geometry">
+       <rect>
+        <x>35</x>
+        <y>184</y>
+        <width>248</width>
+        <height>36</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>开始验证</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_phone">
+      <property name="geometry">
+       <rect>
+        <x>35</x>
+        <y>72</y>
+        <width>248</width>
+        <height>36</height>
+       </rect>
+      </property>
+      <property name="placeholderText">
+       <string>请输入手机号</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_code">
+      <property name="geometry">
+       <rect>
+        <x>35</x>
+        <y>128</y>
+        <width>248</width>
+        <height>36</height>
+       </rect>
+      </property>
+      <property name="placeholderText">
+       <string>请输入验证码</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_title">
+      <property name="geometry">
+       <rect>
+        <x>119</x>
+        <y>20</y>
+        <width>80</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>短信认证</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_code">
+      <property name="geometry">
+       <rect>
+        <x>223</x>
+        <y>137</y>
+        <width>53</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>获取</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_toast">
+      <property name="geometry">
+       <rect>
+        <x>119</x>
+        <y>123</y>
+        <width>80</width>
+        <height>24</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>验证成功</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

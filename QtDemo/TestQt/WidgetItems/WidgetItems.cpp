@@ -1,5 +1,9 @@
 #include "WidgetItems.h"
 #include <QDebug>
+#include <QMessageBox>
+#include "VSafeChatModeWidget.h"
+#include "VToast.h"
+#include <QTextCharFormat>
 
 WidgetItems::WidgetItems(QWidget *parent)
     : QMainWindow(parent)
@@ -16,4 +20,46 @@ WidgetItems::WidgetItems(QWidget *parent)
         QString strUrl = url.toString();
         qDebug() << strUrl;
     });
+
+
+    //VSafeChatModeWidget
+    auto pSafeChatModeWidget = new VSafeChatModeWidget();
+    connect(pSafeChatModeWidget, &VSafeChatModeWidget::sigCheckMsg, [=]() {
+        QMessageBox::warning(this, "warring", "from msg");
+    });
+    connect(pSafeChatModeWidget, &VSafeChatModeWidget::sigLinkActivated, [=]() {
+        QMessageBox::warning(this, "warring", "from link");
+    });
+    connect(ui.pushButton_safeChatMode, &QPushButton::clicked, [=] {
+        pSafeChatModeWidget->show();
+    });
+
+    connect(ui.pushButton_toast, &QPushButton::clicked, [=] {
+        ////全局调用
+        //vToast.toast(QStringLiteral("这都不...."));
+        //子控件调用
+        static VToast myToast(this);
+        myToast.setToastStyle(QStringLiteral(
+            "QLabel#label_toast"
+            "{"
+            "   color: rgba(255, 255, 255);"
+            "   background: rgba(0, 0, 0, 0.6);"
+            "   border-radius: 12px;"
+            "   font-weight: 400;"
+            "   font-size: 12px;"
+            "   padding: 5px 15px 5px 15px;"
+            ""
+            "}"));
+        myToast.toast(QStringLiteral("这都不...."));
+    });
+
+    //init 日期类
+    {
+
+        QTextCharFormat format;//字体风格：黑色
+        format.setForeground(QColor(Qt::black));
+        ui.calendarWidget->setWeekdayTextFormat(Qt::Saturday, format);
+        ui.calendarWidget->setWeekdayTextFormat(Qt::Sunday, format);
+
+    }
 }

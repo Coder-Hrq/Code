@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
+    <width>659</width>
     <height>400</height>
    </rect>
   </property>
@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="page_text">
      <widget class="QLabel" name="label">
@@ -78,6 +78,87 @@ background: yellow;</string>
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="page_date">
+     <widget class="QCalendarWidget" name="calendarWidget">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>30</y>
+        <width>248</width>
+        <height>201</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QCalendarWidget QTableView 
+{
+    alternate-background-color:rgba(255, 255, 255, 1);  /* day name/week number background */
+ 	color: black;
+}
+
+/*这里是标题栏的样式*/
+QCalendarWidget QWidget#qt_calendar_navigationbar
+{ 
+  	background-color: rgba(255, 255, 255, 1); 
+}
+
+QToolButton#qt_calendar_monthbutton
+{
+	color: black;
+}
+
+QToolButton#qt_calendar_yearbutton
+{
+	color: black;
+}
+
+
+QCalendarWidget QAbstractItemView:!enabled {
+    color: rgb(168, 168, 168);
+}</string>
+      </property>
+      <property name="gridVisible">
+       <bool>false</bool>
+      </property>
+      <property name="horizontalHeaderFormat">
+       <enum>QCalendarWidget::ShortDayNames</enum>
+      </property>
+      <property name="verticalHeaderFormat">
+       <enum>QCalendarWidget::NoVerticalHeader</enum>
+      </property>
+      <property name="navigationBarVisible">
+       <bool>true</bool>
+      </property>
+      <property name="dateEditEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="pushButton_safeChatMode">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>10</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>safeChatMode</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_toast">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>10</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>toast</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -85,7 +166,7 @@ background: yellow;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>600</width>
+     <width>659</width>
      <height>23</height>
     </rect>
    </property>
