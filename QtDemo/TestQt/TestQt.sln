@@ -41,6 +41,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageAndPixmap", "ImageAndP
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VVMDMode", "VVMDMode\VVMDMode.vcxproj", "{5EB9AF24-16E9-457C-9003-FA5EA01E8436}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestQuick", "TestQuick\TestQuick.vcxproj", "{5DD96285-D33F-4676-AE26-B2E3503AA28B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -243,6 +245,16 @@ Global
 		{5EB9AF24-16E9-457C-9003-FA5EA01E8436}.Release|x64.ActiveCfg = Release|Win32
 		{5EB9AF24-16E9-457C-9003-FA5EA01E8436}.Release|x86.ActiveCfg = Release|Win32
 		{5EB9AF24-16E9-457C-9003-FA5EA01E8436}.Release|x86.Build.0 = Release|Win32
+		{5DD96285-D33F-4676-AE26-B2E3503AA28B}.Debug|ARM.ActiveCfg = Debug|Win32
+		{5DD96285-D33F-4676-AE26-B2E3503AA28B}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{5DD96285-D33F-4676-AE26-B2E3503AA28B}.Debug|x64.ActiveCfg = Debug|Win32
+		{5DD96285-D33F-4676-AE26-B2E3503AA28B}.Debug|x86.ActiveCfg = Debug|Win32
+		{5DD96285-D33F-4676-AE26-B2E3503AA28B}.Debug|x86.Build.0 = Debug|Win32
+		{5DD96285-D33F-4676-AE26-B2E3503AA28B}.Release|ARM.ActiveCfg = Release|Win32
+		{5DD96285-D33F-4676-AE26-B2E3503AA28B}.Release|ARM64.ActiveCfg = Release|Win32
+		{5DD96285-D33F-4676-AE26-B2E3503AA28B}.Release|x64.ActiveCfg = Release|Win32
+		{5DD96285-D33F-4676-AE26-B2E3503AA28B}.Release|x86.ActiveCfg = Release|Win32
+		{5DD96285-D33F-4676-AE26-B2E3503AA28B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
