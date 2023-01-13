@@ -5,32 +5,51 @@ import QtQuick.Layouts 1.12
 import QtQuick 2.0
 import QtGraphicalEffects 1.12
 
-Window {
+import global.item 1.0
+
+FramelessWindow {
     width: 640
     height: 480
     title: qsTr("Hello World")
     id: mainWindow
-    color: "#00000000"
     visible: true
     modality: Qt.WindowModal
-    flags: Qt.FramelessWindowHint | Qt.Window
+    minimumWidth: 100
+    minimumHeight: 100
     //color: Qt.rgba(255, 255, 255, 0.01)
 
     
     MouseArea {
         anchors.fill: parent
+        id: mouseWindow
         property int mx: 0
-        property int my: 0
-        onPressed: {
-            mx=mouseX
-            my=mouseY
+        property int my: 0  
+        property bool bMove: false 
+        hoverEnabled: true
+        onEntered:{
+            bMove = false
         }
+        onExited:{
+            bMove = false
+        }
+        onPressed: {
+            mx = mouseX
+            my = mouseY
+            bMove = true
+        }
+        onReleased: {
+            bMove = false
+        }
+
         onPositionChanged: {
-            mainWindow.x+=mouseX-mx
-            mainWindow.y+=mouseY-my
+            if (bMove){
+                mainWindow.x+=mouseX-mx
+                mainWindow.y+=mouseY-my
+            }
         }
     }
     
+
     GridLayout{
         anchors.fill: parent
 
@@ -60,21 +79,4 @@ Window {
             }
         }
     }
-
-    /*
-    Rectangle{
-        id: leftRect
-        opacity: 0
-        width: mainWindow.width  - rightRect.width
-        height: mainWindow.height
-    }
-
-   Rectangle{
-        id: rightRect
-        opacity: 0
-        x: leftRect.width
-        width: 350
-        height: mainWindow.height
-    }
-    */
 }
