@@ -10,7 +10,7 @@ import global.item 1.0
 FramelessWindow {
     width: 640
     height: 480
-    title: qsTr("Hello World")
+    title: qsTr("测试圆边阴影窗口")
     id: mainWindow
     visible: true
     modality: Qt.WindowModal
@@ -18,6 +18,12 @@ FramelessWindow {
     minimumHeight: 100
     //color: Qt.rgba(255, 255, 255, 0.01)
 
+    /*
+    FramelessWindow {
+        visible: true
+        color: "red"
+    }
+    */
     
     MouseArea {
         anchors.fill: parent
@@ -38,13 +44,15 @@ FramelessWindow {
             bMove = true
         }
         onReleased: {
+
             bMove = false
         }
 
         onPositionChanged: {
-            if (bMove){
+            if (bMove && !mainWindow.isDraging){
                 mainWindow.x+=mouseX-mx
                 mainWindow.y+=mouseY-my
+                console.log("Move")
             }
         }
     }
@@ -53,13 +61,14 @@ FramelessWindow {
     GridLayout{
         anchors.fill: parent
 
+        //设置阴影边框
         Rectangle {        
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.margins: 10
             radius: 10
             color: "#404142"
-        
+             
             layer.enabled: true
             layer.effect: DropShadow {
                 color: Qt.rgba(0, 0, 0, 0.9)

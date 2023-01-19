@@ -6,49 +6,39 @@ class FramelessWindow : public QQuickWindow
 {
     Q_OBJECT
 
-    Q_PROPERTY(bool resizable READ resizable WRITE setResizable)
-    Q_PROPERTY(int drag_area READ read_pan WRITE set_pan)
+    Q_PROPERTY(bool isDraging READ isDraging)
 
-    enum MouseArea
+    enum CursorPosType//鼠标位置类型
     {
-        TopLeft = 1,
-        Top,
-        TopRight,
-        Left,
-        Move,
-        Right,
-        BottomLeft,
-        Bottom,
-        BottomRight,
-        Client
+        TYPE_NORMAL = 0,
+        TYPE_TOP_LINE,                  //上边位置
+        TYPE_BOTTON_LINE,               //下边位置
+        TYPE_LEFT_LINE,                 //左边位置
+        TYPE_RIGHT_LINE,                //右边位置
+        TYPE_LEFT_TOP_ANGLE,            //左上角位置
+        TYPE_LEFT_BOTTON_ANGLE,         //左下角位置
+        TYPE_RIGHT_TOP_ANGLE,           //右上角位置
+        TYPE_RIGHT_BOTTON_ANGLE,        //右下角位置
+        TYPE_MOVE_TOOL                  //移动位置
     };
 
 public:
     explicit FramelessWindow(QWindow *parent = nullptr);
-    int read_pan() const;
-    void set_pan(int _pan);
-    bool resizable() const;
-    void setResizable(bool arg);
+    bool isDraging() const;
 
 protected:
-    void mousePressEvent(QMouseEvent *event) override;
-
-    void mouseReleaseEvent(QMouseEvent *event) override;
-
-    void mouseMoveEvent(QMouseEvent *event) override;
-
+    bool eventFilter(QObject *watched, QEvent *event)override;
 
 private:
-    MouseArea getArea(const QPoint &pos);
+    CursorPosType       GetCursorPosType();
+    void                SetCurrentCursorPosType(const CursorPosType &eType);
+    void                UpdateCursorShape(const CursorPosType &eType);
+    void                AdjustSize(const CursorPosType &eType);
 
-    void setWindowGeometry(const QPoint &pos);
-
-    void setCursorIcon();
-
-    bool m_resizable = true;
-    MouseArea m_currentArea = Client;
-    QPoint m_startPos;
-    QPoint m_oldPos;
-    QSize m_oldSize;
-    int pan = 8;
+private:
+    bool                m_bPressed = false;  
+    bool                m_isDraging = false;
+    QPoint              m_qBeforePoint;
+    QPoint              m_qCurrentPoint;
+    CursorPosType       m_CursorPosType;
 };

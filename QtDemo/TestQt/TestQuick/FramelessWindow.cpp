@@ -1,206 +1,237 @@
 #include "FramelessWindow.h"
 
+#define         FRAME_ENABLE_LINE_WIDTH         10          //边框对鼠标有效宽度
+#define         FRAME_ENABLE_ANGLE_WIDTH        15          //边框4个角对鼠标的有效宽度
+#define         TOP_MOVE_TOOL_WIDTH             0           //上边可移动选中的宽度
+#define         FRAME_MIN_WIDTH                 60          //窗口最小宽度
+#define         FRAME_MIN_HEIGHE                60          //窗口最小高度
+
 FramelessWindow::FramelessWindow(QWindow *parent) : QQuickWindow(parent)
+, m_bPressed(false)
+, m_qCurrentPoint(-1, -1)
+, m_CursorPosType(CursorPosType::TYPE_NORMAL)
 {
     setFlags(flags() | Qt::Window | Qt::FramelessWindowHint);
     setColor(QColor(Qt::transparent));
+    installEventFilter(this);
 }
 
-bool FramelessWindow::resizable() const
+bool FramelessWindow::isDraging() const
 {
-    return m_resizable;
+    return m_isDraging;
 }
 
-
-void FramelessWindow::setResizable(bool arg)
+bool FramelessWindow::eventFilter(QObject *watched, QEvent *event)
 {
-    if (m_resizable != arg)
+    QMouseEvent* pMouseEvent = static_cast<QMouseEvent*>(event);
+    if (nullptr != pMouseEvent)
     {
-        m_resizable = arg;
-    }
-}
-
-void FramelessWindow::mousePressEvent(QMouseEvent *event)
-{
-    m_startPos = event->globalPos();
-    m_oldPos = position();
-    m_oldSize = size();
-
-    event->ignore();
-
-    QQuickWindow::mousePressEvent(event);
-}
-
-void FramelessWindow::mouseReleaseEvent(QMouseEvent *event)
-{
-    m_oldPos = position();
-
-    QQuickWindow::mouseReleaseEvent(event);
-}
-
-
-void FramelessWindow::mouseMoveEvent(QMouseEvent *event)
-{
-    if (event->buttons() & Qt::LeftButton)
-    {
-        if (m_resizable && m_currentArea != Move)
+        if (watched == this && QMouseEvent::MouseButtonPress == pMouseEvent->type())
         {
-            setWindowGeometry(event->globalPos());
+            SetCurrentCursorPosType(GetCursorPosType());
+            m_bPressed = true;
+            m_isDraging = false;
+            m_qCurrentPoint = QCursor::pos();
+        }
+        else if (watched == this && QMouseEvent::MouseButtonRelease == pMouseEvent->type())
+        {
+            m_bPressed = false;
+            m_isDraging = false;
+            m_qCurrentPoint = QPoint(-1, -1);
+            m_CursorPosType = CursorPosType::TYPE_NORMAL;
+        }
+        else if (false == m_bPressed && QMouseEvent::MouseMove == pMouseEvent->type())
+        {
+            CursorPosType CursorPosType = GetCursorPosType();
+            UpdateCursorShape(CursorPosType);
+        }
+
+        if (CursorPosType::TYPE_MOVE_TOOL == m_CursorPosType
+            && QMouseEvent::MouseMove == pMouseEvent->type())
+        {
+            m_qCurrentPoint = QCursor::pos();
+            //move(pos() + (m_qCurrentPoint - m_qBeforePoint));
+        }
+        else if (CursorPosType::TYPE_NORMAL != m_CursorPosType
+            && CursorPosType::TYPE_MOVE_TOOL != m_CursorPosType
+            && QMouseEvent::MouseMove == pMouseEvent->type())
+        {
+            m_qCurrentPoint = QCursor::pos();
+            AdjustSize(m_CursorPosType);
         }
     }
-    else
-    {
-        QPoint pos = event->pos();
-        m_currentArea = getArea(pos);
-        if (m_resizable)
-            setCursorIcon();
-    }
-
-    QQuickWindow::mouseMoveEvent(event);
+    return false;
 }
 
-FramelessWindow::MouseArea FramelessWindow::getArea(const QPoint &pos)
+FramelessWindow::CursorPosType FramelessWindow::GetCursorPosType()
 {
-    int x = pos.x();
-    int y = pos.y();
-    int w = width();
-    int h = height();
-    MouseArea area;
-    if (x >= 0 && x <= pan && y >= 0 && y <= pan)
+    QRect rect = geometry();
+    QPoint point = QCursor::pos();
+    QRect rectLeftTop = QRect(rect.x(),
+        rect.y(),
+        FRAME_ENABLE_ANGLE_WIDTH,
+        FRAME_ENABLE_ANGLE_WIDTH);
+
+    QRect rectLeftBotton = QRect(rect.x(),
+        rect.y() + rect.height() - FRAME_ENABLE_ANGLE_WIDTH,
+        FRAME_ENABLE_ANGLE_WIDTH,
+        FRAME_ENABLE_ANGLE_WIDTH);
+
+    QRect rectRightBotton = QRect(rect.x() + rect.width() - FRAME_ENABLE_ANGLE_WIDTH,
+        rect.y() + rect.height() - FRAME_ENABLE_ANGLE_WIDTH,
+        FRAME_ENABLE_ANGLE_WIDTH,
+        FRAME_ENABLE_ANGLE_WIDTH);
+
+    QRect rectRightTop = QRect(rect.x() + rect.width() - FRAME_ENABLE_ANGLE_WIDTH,
+        rect.y(),
+        FRAME_ENABLE_ANGLE_WIDTH,
+        FRAME_ENABLE_ANGLE_WIDTH);
+
+    QRect rectTop = QRect(rect.x(),
+        rect.y(),
+        rect.width(),
+        FRAME_ENABLE_LINE_WIDTH);
+
+    QRect rectBotton = QRect(rect.x(),
+        rect.y() + rect.height() - FRAME_ENABLE_LINE_WIDTH,
+        rect.width(),
+        FRAME_ENABLE_LINE_WIDTH);
+
+    QRect rectLeft = QRect(rect.x(),
+        rect.y(),
+        FRAME_ENABLE_LINE_WIDTH,
+        rect.height());
+
+    QRect rectRight = QRect(rect.x() + rect.width() - FRAME_ENABLE_LINE_WIDTH,
+        rect.y(),
+        FRAME_ENABLE_LINE_WIDTH,
+        rect.height());
+
+    QRect rectMove = QRect(rect.x(),
+        rect.y(),
+        rect.width(),
+        TOP_MOVE_TOOL_WIDTH);
+
+
+    if (rectLeftTop.contains(point))
     {
-        area = TopLeft;
+        return CursorPosType::TYPE_LEFT_TOP_ANGLE;
     }
-    else if (x > pan && x < (w - pan) && y >= 0 && y <= pan)
+    else if (rectLeftBotton.contains(point))
     {
-        area = Top;
+        return CursorPosType::TYPE_LEFT_BOTTON_ANGLE;
     }
-    else if (x >= (w - pan) && x <= w && y >= 0 && y <= pan)
+    else if (rectRightBotton.contains(point))
     {
-        area = TopRight;
+        return CursorPosType::TYPE_RIGHT_BOTTON_ANGLE;
     }
-    else if (x >= 0 && x <= pan && y > pan && y < (h - pan))
+    else if (rectRightTop.contains(point))
     {
-        area = Left;
+        return CursorPosType::TYPE_RIGHT_TOP_ANGLE;
     }
-    else if (x >= (w - pan) && x <= w && y > pan && y < (h - pan))
+    else if (rectLeft.contains(point))
     {
-        area = Right;
+        return CursorPosType::TYPE_LEFT_LINE;
     }
-    else if (x >= 0 && x <= pan && y >= (h - pan) && y <= h)
+    else if (rectRight.contains(point))
     {
-        area = BottomLeft;
+        return CursorPosType::TYPE_RIGHT_LINE;
     }
-    else if (x > pan && x < (w - pan) && y >= (h - pan) && y <= h)
+    else if (rectTop.contains(point))
     {
-        area = Bottom;
+        return CursorPosType::TYPE_TOP_LINE;
     }
-    else if (x >= (w - pan) && x <= w && y >= (h - pan) && y <= h)
+    else if (rectBotton.contains(point))
     {
-        area = BottomRight;
+        return CursorPosType::TYPE_BOTTON_LINE;
     }
-    else
+    else if (rectMove.contains(point))
     {
-        area = Client;
+        return CursorPosType::TYPE_MOVE_TOOL;
     }
 
-    return area;
-}
-int FramelessWindow::read_pan() const {
-    return pan;
+    return CursorPosType::TYPE_NORMAL;
 }
 
-void FramelessWindow::set_pan(int _pan) {
-    pan = _pan;
-}
-void FramelessWindow::setWindowGeometry(const QPoint &pos)
+void FramelessWindow::SetCurrentCursorPosType(const CursorPosType &eType)
 {
-    QPoint offset = m_startPos - pos;
-
-    if (offset.x() == 0 && offset.y() == 0)
-        return;
-
-    static auto set_geometry_func = [this](const QSize &size, const QPoint &pos) {
-        QPoint temp_pos = m_oldPos;
-        QSize temp_size = minimumSize();
-        if (size.width() > minimumWidth())
-        {
-            temp_pos.setX(pos.x());
-            temp_size.setWidth(size.width());
-        }
-        else
-        {
-            if (m_currentArea == Left)
-            {
-                temp_pos.setX(m_oldPos.x() + m_oldSize.width() - minimumWidth());
-            }
-
-        }
-        if (size.height() > minimumHeight())
-        {
-            temp_pos.setY(pos.y());
-            temp_size.setHeight(size.height());
-        }
-        else
-        {
-            if (m_currentArea == Top)
-                temp_pos.setY(m_oldPos.y() + m_oldSize.height() - minimumHeight());
-        }
-        setGeometry(QRect(temp_pos, temp_size));
-        update();
-    };
-
-    switch (m_currentArea)
-    {
-    case TopLeft:set_geometry_func(m_oldSize + QSize(offset.x(), offset.y()), m_oldPos - offset);
-        break;
-    case Top:set_geometry_func(m_oldSize + QSize(0, offset.y()), m_oldPos - QPoint(0, offset.y()));
-        break;
-    case TopRight:set_geometry_func(m_oldSize - QSize(offset.x(), -offset.y()), m_oldPos - QPoint(0, offset.y()));
-        break;
-    case Left:set_geometry_func(m_oldSize + QSize(offset.x(), 0), m_oldPos - QPoint(offset.x(), 0));;
-        break;
-    case Right:set_geometry_func(m_oldSize - QSize(offset.x(), 0), position());
-        break;
-    case BottomLeft:set_geometry_func(m_oldSize + QSize(offset.x(), -offset.y()), m_oldPos - QPoint(offset.x(), 0));
-        break;
-    case Bottom:set_geometry_func(m_oldSize + QSize(0, -offset.y()), position());
-        break;
-    case BottomRight:set_geometry_func(m_oldSize - QSize(offset.x(), offset.y()), position());
-        break;
-    default:break;
-    }
+    m_CursorPosType = eType;
+    UpdateCursorShape(m_CursorPosType);
 }
 
-void FramelessWindow::setCursorIcon()
+void FramelessWindow::UpdateCursorShape(const CursorPosType &eType)
 {
-    static bool unset = false;
-
-    switch (m_currentArea)
+    switch (eType)
     {
-    case TopLeft:
-    case BottomRight:unset = true;
+    case CursorPosType::TYPE_NORMAL:
+        setCursor(Qt::ArrowCursor);
+        break;
+    case CursorPosType::TYPE_MOVE_TOOL:
+        setCursor(Qt::ArrowCursor);
+        break;
+    case CursorPosType::TYPE_LEFT_TOP_ANGLE:
+    case CursorPosType::TYPE_RIGHT_BOTTON_ANGLE:
         setCursor(Qt::SizeFDiagCursor);
         break;
-    case Top:
-    case Bottom:unset = true;
-        setCursor(Qt::SizeVerCursor);
-        break;
-    case TopRight:
-    case BottomLeft:unset = true;
+    case CursorPosType::TYPE_LEFT_BOTTON_ANGLE:
+    case CursorPosType::TYPE_RIGHT_TOP_ANGLE:
         setCursor(Qt::SizeBDiagCursor);
         break;
-    case Left:
-    case Right:unset = true;
-        setCursor(Qt::SizeHorCursor);
+    case CursorPosType::TYPE_TOP_LINE:
+    case CursorPosType::TYPE_BOTTON_LINE:
+        setCursor(Qt::SizeVerCursor);
         break;
-
-    default:
-        if (unset)
-        {
-            unset = false;
-            unsetCursor();
-        }
+    case CursorPosType::TYPE_LEFT_LINE:
+    case CursorPosType::TYPE_RIGHT_LINE:
+        setCursor(Qt::SizeHorCursor);
         break;
     }
 }
+
+void FramelessWindow::AdjustSize(const CursorPosType &eType)
+{
+    if (m_qCurrentPoint == QPoint(-1, -1)
+        || m_qBeforePoint == m_qCurrentPoint)
+    {
+        return;
+    }
+    QRect rect = geometry();
+    switch (eType)
+    {
+    case CursorPosType::TYPE_LEFT_TOP_ANGLE:
+        rect.adjust(m_qCurrentPoint.x() - x(), m_qCurrentPoint.y() - y(), 0, 0);
+        break;
+    case CursorPosType::TYPE_LEFT_BOTTON_ANGLE:
+        rect.adjust(m_qCurrentPoint.x() - x(), 0, 0, m_qCurrentPoint.y() - (y() + height()));
+        break;
+    case CursorPosType::TYPE_RIGHT_TOP_ANGLE:
+        rect.adjust(0, m_qCurrentPoint.y() - y(), m_qCurrentPoint.x() - (x() + width()), 0);
+        break;
+    case CursorPosType::TYPE_RIGHT_BOTTON_ANGLE:
+        rect.adjust(0, 0, m_qCurrentPoint.x() - (x() + width()), m_qCurrentPoint.y() - (y() + height()));
+        break;
+    case CursorPosType::TYPE_LEFT_LINE:
+        rect.adjust(m_qCurrentPoint.x() - x(), 0, 0, 0);
+        break;
+    case CursorPosType::TYPE_RIGHT_LINE:
+        rect.adjust(0, 0, m_qCurrentPoint.x() - (x() + width()), 0);
+        break;
+    case CursorPosType::TYPE_TOP_LINE:
+        rect.adjust(0, m_qCurrentPoint.y() - y(), 0, 0);
+        break;
+    case CursorPosType::TYPE_BOTTON_LINE:
+        rect.adjust(0, 0, 0, m_qCurrentPoint.y() - (y() + height()));
+        break;
+    }
+    m_qBeforePoint = m_qCurrentPoint;
+
+    if (rect.width() < FRAME_MIN_WIDTH
+        || rect.height() < FRAME_MIN_HEIGHE)
+    {
+        return;
+    }
+    setGeometry(rect);
+    m_isDraging = true;
+}
+
 
