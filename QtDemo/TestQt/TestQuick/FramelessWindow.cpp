@@ -12,6 +12,7 @@ FramelessWindow::FramelessWindow(QWindow *parent) : QQuickWindow(parent)
 , m_CursorPosType(CursorPosType::TYPE_NORMAL)
 {
     setFlags(flags() | Qt::Window | Qt::FramelessWindowHint);
+    m_dragFrame->setFlags(m_dragFrame->flags() | Qt::Window | Qt::FramelessWindowHint);
     setColor(QColor(Qt::transparent));
     installEventFilter(this);
 }
@@ -37,6 +38,7 @@ bool FramelessWindow::eventFilter(QObject *watched, QEvent *event)
         {
             m_bPressed = false;
             m_isDraging = false;
+            m_dragFrame->hide();
             m_qCurrentPoint = QPoint(-1, -1);
             m_CursorPosType = CursorPosType::TYPE_NORMAL;
         }
@@ -231,7 +233,13 @@ void FramelessWindow::AdjustSize(const CursorPosType &eType)
         return;
     }
     setGeometry(rect);
-    m_isDraging = true;
+
+    m_dragFrame->setGeometry(rect);
+    //m_dragFrame->show();
+    raise();
+
+    if (!m_isDraging)
+        m_isDraging = true;
 }
 
 

@@ -41,4 +41,5 @@ private:
     QPoint              m_qBeforePoint;
     QPoint              m_qCurrentPoint;
     CursorPosType       m_CursorPosType;
+    QWindow             *m_dragFrame = new QWindow;
 };

@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Window 2.2
 import QtQuick.Layouts 1.12
+import QtQuick.Controls 2.5
 
 import QtQuick 2.0
 import QtGraphicalEffects 1.12
@@ -57,6 +58,80 @@ FramelessWindow {
         }
     }
     
+    //虚边
+    Rectangle{
+        id: dragFrame
+        width: 400
+        height: 100
+        anchors.fill: parent
+        color: Qt.rgba(255, 0, 0, 0)
+        border.color: "white";
+        Column{
+            width:1
+            height:parent.height
+            spacing: 5
+            clip: true
+            anchors.left: parent.left
+            Repeater{
+                anchors.fill: parent
+                model: parent.height/10
+                delegate:Rectangle{
+                    width: 1
+                    height: 5
+                    color: "black"
+                }
+            }
+        }
+        Column{
+            width:1
+            height:parent.height
+            spacing: 5
+            clip: true
+            anchors.right: parent.right
+            Repeater{
+                anchors.fill: parent
+                model: parent.height/10
+                delegate:Rectangle{
+                    width:1
+                    height: 5
+                    color: "black"
+                }
+            }
+        }
+        Row{
+            width: parent.width
+            height: 1
+            spacing: 5
+            clip: true
+            anchors.top: parent.top
+            Repeater{
+                anchors.fill: parent
+                model: parent.width/10
+                delegate:Rectangle{
+                    width: 5
+                    height: 1
+                    color: "black"
+                }
+            }
+        }
+        Row{
+            width: parent.width
+            height: 1
+            spacing: 5
+            clip: true
+            anchors.bottom: parent.bottom
+            Repeater{
+                anchors.fill: parent
+                model: parent.width/10
+                delegate:Rectangle{
+                    width: 5
+                    height: 1
+                    color: "black"
+                }
+            }
+        }
+    }
+
 
     GridLayout{
         anchors.fill: parent
