@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QQuickWindow>
+#include <QQuickView>
 
 class FramelessWindow : public QQuickWindow
 {
@@ -29,6 +30,10 @@ public:
 protected:
     bool eventFilter(QObject *watched, QEvent *event)override;
 
+signals:
+    void sigRect(QRect rect);
+    void sigChangeRect(QRect rect);
+
 private:
     CursorPosType       GetCursorPosType();
     void                SetCurrentCursorPosType(const CursorPosType &eType);
@@ -41,5 +46,6 @@ private:
     QPoint              m_qBeforePoint;
     QPoint              m_qCurrentPoint;
     CursorPosType       m_CursorPosType;
-    QWindow             *m_dragFrame = new QWindow;
+    QQuickView          *m_dragFrame;
+    QRect               m_curRect;
 };

@@ -58,108 +58,44 @@ FramelessWindow {
         }
     }
     
-    //虚边
     Rectangle{
-        id: dragFrame
-        width: 400
-        height: 100
-        anchors.fill: parent
+        id: mainRect
         color: Qt.rgba(255, 0, 0, 0)
-        border.color: "white";
-        Column{
-            width:1
-            height:parent.height
-            spacing: 5
-            clip: true
-            anchors.left: parent.left
-            Repeater{
-                anchors.fill: parent
-                model: parent.height/10
-                delegate:Rectangle{
-                    width: 1
-                    height: 5
-                    color: "black"
-                }
-            }
-        }
-        Column{
-            width:1
-            height:parent.height
-            spacing: 5
-            clip: true
-            anchors.right: parent.right
-            Repeater{
-                anchors.fill: parent
-                model: parent.height/10
-                delegate:Rectangle{
-                    width:1
-                    height: 5
-                    color: "black"
-                }
-            }
-        }
-        Row{
-            width: parent.width
-            height: 1
-            spacing: 5
-            clip: true
-            anchors.top: parent.top
-            Repeater{
-                anchors.fill: parent
-                model: parent.width/10
-                delegate:Rectangle{
-                    width: 5
-                    height: 1
-                    color: "black"
-                }
-            }
-        }
-        Row{
-            width: parent.width
-            height: 1
-            spacing: 5
-            clip: true
-            anchors.bottom: parent.bottom
-            Repeater{
-                anchors.fill: parent
-                model: parent.width/10
-                delegate:Rectangle{
-                    width: 5
-                    height: 1
-                    color: "black"
-                }
-            }
-        }
-    }
-
-
-    GridLayout{
         anchors.fill: parent
+        /*
+        Component.onCompleted: {
+            mainRect.width=mainWindow.width
+            mainRect.height=mainWindow.height
+        }
+        */
+        GridLayout{
+            anchors.fill: parent
 
-        //设置阴影边框
-        Rectangle {        
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            Layout.margins: 10
-            radius: 10
-            color: "#404142"
-             
-            layer.enabled: true
-            layer.effect: DropShadow {
-                color: Qt.rgba(0, 0, 0, 0.9)
-                samples: 21
+            //设置阴影边框
+            Rectangle {        
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.margins: 10
                 radius: 10
-                spread: 0
-            }
+                color: "#404142"
+             
+                layer.enabled: true
+                layer.effect: DropShadow {
+                    color: Qt.rgba(0, 0, 0, 0.9)
+                    samples: 21
+                    radius: 10
+                    spread: 0
+                }
 
-            Text{
-                anchors.fill: parent
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment : Text.AlignVCenter
-                text: "测试圆边阴影，拉伸，移动窗口"
-                color: "white"
-                font.pixelSize: 20
+                Text{
+                    anchors.fill: parent
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment : Text.AlignVCenter
+                    text: "测试圆边阴影，拉伸，移动窗口"
+                    color: "white"
+                    font.pixelSize: 20
 
+                }
             }
         }
     }

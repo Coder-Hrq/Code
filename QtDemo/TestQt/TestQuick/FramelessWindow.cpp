@@ -3,18 +3,34 @@
 #define         FRAME_ENABLE_LINE_WIDTH         10          //边框对鼠标有效宽度
 #define         FRAME_ENABLE_ANGLE_WIDTH        15          //边框4个角对鼠标的有效宽度
 #define         TOP_MOVE_TOOL_WIDTH             0           //上边可移动选中的宽度
-#define         FRAME_MIN_WIDTH                 60          //窗口最小宽度
+#define         FRAME_MIN_WIDTH                 310          //窗口最小宽度
 #define         FRAME_MIN_HEIGHE                60          //窗口最小高度
 
 FramelessWindow::FramelessWindow(QWindow *parent) : QQuickWindow(parent)
 , m_bPressed(false)
 , m_qCurrentPoint(-1, -1)
 , m_CursorPosType(CursorPosType::TYPE_NORMAL)
+, m_dragFrame(new QQuickView())
 {
     setFlags(flags() | Qt::Window | Qt::FramelessWindowHint);
-    m_dragFrame->setFlags(m_dragFrame->flags() | Qt::Window | Qt::FramelessWindowHint);
     setColor(QColor(Qt::transparent));
     installEventFilter(this);
+
+    m_dragFrame->setFlags(Qt::FramelessWindowHint);
+    m_dragFrame->setColor(QColor(Qt::transparent));
+    m_dragFrame->setTransientParent(nullptr);
+    m_dragFrame->setSource(QUrl(QStringLiteral("qrc:/fuzzyFrame.qml")));
+
+    connect(this, &FramelessWindow::sigRect, [=](QRect rect) {
+        m_dragFrame->setGeometry(rect);
+        m_dragFrame->show();
+        m_dragFrame->raise();
+        m_curRect = rect;
+    });
+
+    connect(this, &FramelessWindow::sigChangeRect, [=](QRect rect) {
+        setGeometry(rect);
+    });
 }
 
 bool FramelessWindow::isDraging() const
@@ -27,6 +43,14 @@ bool FramelessWindow::eventFilter(QObject *watched, QEvent *event)
     QMouseEvent* pMouseEvent = static_cast<QMouseEvent*>(event);
     if (nullptr != pMouseEvent)
     {
+        bool bChangeRect = false;
+        if (CursorPosType::TYPE_NORMAL != m_CursorPosType
+            && CursorPosType::TYPE_MOVE_TOOL != m_CursorPosType
+            && QMouseEvent::MouseButtonRelease == pMouseEvent->type())
+        {
+            bChangeRect = true;
+        }
+
         if (watched == this && QMouseEvent::MouseButtonPress == pMouseEvent->type())
         {
             SetCurrentCursorPosType(GetCursorPosType());
@@ -55,11 +79,16 @@ bool FramelessWindow::eventFilter(QObject *watched, QEvent *event)
             //move(pos() + (m_qCurrentPoint - m_qBeforePoint));
         }
         else if (CursorPosType::TYPE_NORMAL != m_CursorPosType
-            && CursorPosType::TYPE_MOVE_TOOL != m_CursorPosType
-            && QMouseEvent::MouseMove == pMouseEvent->type())
+        && CursorPosType::TYPE_MOVE_TOOL != m_CursorPosType
+        && QMouseEvent::MouseMove == pMouseEvent->type())
         {
             m_qCurrentPoint = QCursor::pos();
             AdjustSize(m_CursorPosType);
+        }
+
+        if (bChangeRect)
+        {
+            emit sigChangeRect(m_curRect);
         }
     }
     return false;
@@ -232,11 +261,8 @@ void FramelessWindow::AdjustSize(const CursorPosType &eType)
     {
         return;
     }
-    setGeometry(rect);
 
-    m_dragFrame->setGeometry(rect);
-    //m_dragFrame->show();
-    raise();
+    emit sigRect(rect);
 
     if (!m_isDraging)
         m_isDraging = true;
