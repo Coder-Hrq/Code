@@ -77,19 +77,6 @@
         <property name="frameShadow">
          <enum>QFrame::Raised</enum>
         </property>
-        <widget class="QLineEdit" name="lineEdit_url">
-         <property name="geometry">
-          <rect>
-           <x>30</x>
-           <y>20</y>
-           <width>431</width>
-           <height>20</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>file:///./web/vue/index001.html</string>
-         </property>
-        </widget>
         <widget class="QPushButton" name="pushButton_enter">
          <property name="geometry">
           <rect>
@@ -141,6 +128,34 @@
          <property name="text">
           <string>Qt SendJs</string>
          </property>
+        </widget>
+        <widget class="QComboBox" name="comboBox_url">
+         <property name="geometry">
+          <rect>
+           <x>30</x>
+           <y>20</y>
+           <width>431</width>
+           <height>22</height>
+          </rect>
+         </property>
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>file:///./web/vue/index001.html</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>file:///./web/vue/version.html</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>https://html5test.com/</string>
+          </property>
+         </item>
         </widget>
        </widget>
       </item>

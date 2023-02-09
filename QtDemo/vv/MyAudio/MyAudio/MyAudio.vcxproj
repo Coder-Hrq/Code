@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{D82B69E2-7997-4020-AB43-734224E87E78}</ProjectGuid>
+    <ProjectGuid>{42204629-8E04-45A4-B2AE-84DD80A281CE}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'">10.0.19041.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'">10.0.19041.0</WindowsTargetPlatformVersion>
@@ -32,12 +32,12 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|Win32'" Label="QtSettings">
     <QtInstall>Qt5.12.11_msvc2017_32</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>quick</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|Win32'" Label="QtSettings">
     <QtInstall>Qt5.12.11_msvc2017_32</QtInstall>
-    <QtModules>core;gui;widgets</QtModules>
+    <QtModules>quick</QtModules>
     <QtBuildConfig>release</QtBuildConfig>
   </PropertyGroup>
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -85,20 +85,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <QtRcc Include="VItem.qrc" />
-    <QtUic Include="VCaptureWidget.ui" />
-    <QtUic Include="VItem.ui" />
-    <QtMoc Include="VItem.h" />
-    <ClCompile Include="vAnimationText.cpp" />
-    <ClCompile Include="VCaptureWidget.cpp" />
-    <ClCompile Include="VItem.cpp" />
     <ClCompile Include="main.cpp" />
+    <QtRcc Include="qml.qrc" />
+    <None Include="main.qml" />
+    <QtRcc Include="qrc\Resource.qrc" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="vAnimationText.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="resource1.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="VCaptureWidget.h" />
+    <ResourceCompile Include="MyAudio.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

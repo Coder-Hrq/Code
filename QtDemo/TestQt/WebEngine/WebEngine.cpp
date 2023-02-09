@@ -8,7 +8,7 @@ WebEngine::WebEngine(QWidget *parent)
     ui.setupUi(this);
 
     connect(ui.pushButton_enter, &QPushButton::clicked, [=]() {
-        ui.webEngineView->load(QUrl(ui.lineEdit_url->text()));
+        ui.webEngineView->load(QUrl(ui.comboBox_url->currentText()));
     });
 
 	connect(ui.pushButton_debug, &QPushButton::clicked, [=]() {
