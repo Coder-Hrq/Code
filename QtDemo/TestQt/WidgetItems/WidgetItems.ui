@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="page_text">
      <widget class="QLabel" name="label">
@@ -158,6 +158,19 @@ QCalendarWidget QAbstractItemView:!enabled {
     </property>
     <property name="text">
      <string>toast</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_system">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>50</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>system</string>
     </property>
    </widget>
   </widget>

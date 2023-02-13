@@ -4,6 +4,8 @@
 #include "VSafeChatModeWidget.h"
 #include "VToast.h"
 #include <QTextCharFormat>
+#include <windows.h>
+#include <QFileInfo>
 
 WidgetItems::WidgetItems(QWidget *parent)
     : QMainWindow(parent)
@@ -62,4 +64,64 @@ WidgetItems::WidgetItems(QWidget *parent)
         ui.calendarWidget->setWeekdayTextFormat(Qt::Sunday, format);
 
     }
+
+    //测试系统
+    connect(ui.pushButton_system, &QPushButton::clicked, [=]() {
+        QMessageBox::warning(nullptr, QStringLiteral("提示"), getSystemStr());
+    });
+}
+
+QString WidgetItems::getSystemStr()
+{
+    qint64 fileSize = 35 * 1024 * 1024;
+    return QStringLiteral("磁盘剩余空间：%1\n创建文件是否成功：size:%2,ret:%3")
+        .arg(getDiskFreeSpace("C:"))
+        .arg(fileSize)
+        .arg(saveFile("G:/file", fileSize));
+}
+
+quint64 WidgetItems::getDiskFreeSpace(const QString &driver)
+{
+    QString strDiver;
+    LPCWSTR lpcwstrDriver = (LPCWSTR)driver.utf16();
+
+    ULARGE_INTEGER liFreeBytesAvailable, liTotalBytes, liTotalFreeBytes;
+
+    if (!GetDiskFreeSpaceEx(lpcwstrDriver, &liFreeBytesAvailable, &liTotalBytes, &liTotalFreeBytes))
+    {
+        qDebug() << "ERROR: Call to GetDiskFreeSpaceEx() failed.";
+        return 0;
+    }
+
+    //磁盘总空间
+    qDebug() << "liTotalBytes=" << liTotalBytes.QuadPart / 1024 / 1024 / 1024 << "G";
+    //磁盘剩余空间
+    qDebug() << "liTotalFreeBytes=" << liTotalFreeBytes.QuadPart / 1024 / 1024 / 1024 << "G";
+
+    return (quint64)liTotalFreeBytes.QuadPart / 1024 / 1024 / 1024;
+}
+
+bool WidgetItems::saveFile(const QString &fileName, qint64 size)
+{
+    QFileInfo fileInfo(fileName);
+    if (fileInfo.exists())
+    {
+        QFile(fileName).remove();
+    }
+    QFile file(fileName);
+    int maxSize = 100 * 1024 * 1024;
+    qint64 theSize = size;
+    qint64 writeCount = 0;
+    if (file.open(QIODevice::WriteOnly))
+    {
+        //每次写入不大于100M
+        while(theSize > 0)
+        {
+            QString strData = QString().fill('1', theSize >= maxSize ? maxSize : theSize);
+            writeCount += file.write(strData.toUtf8());
+            theSize -= maxSize;
+        }
+    }
+    file.close();
+    return QFileInfo(fileName).exists() && QFileInfo(fileName).size() == size;
 }
