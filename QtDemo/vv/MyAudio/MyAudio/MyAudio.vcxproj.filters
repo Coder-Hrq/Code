@@ -17,6 +17,9 @@
       <UniqueIdentifier>{639EADAA-A684-42e4-A9AD-28FC9BCB8F7C}</UniqueIdentifier>
       <Extensions>ts</Extensions>
     </Filter>
+    <Filter Include="control">
+      <UniqueIdentifier>{ca98ca63-9190-4c7b-99ec-ba264fe14010}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -46,5 +49,10 @@
     <QtRcc Include="qrc\Resource.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="control\RLineEdit.qml">
+      <Filter>control</Filter>
+    </None>
   </ItemGroup>
 </Project>

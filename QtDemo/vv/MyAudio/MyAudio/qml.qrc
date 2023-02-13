@@ -2,4 +2,7 @@
     <qresource prefix="/">
         <file>main.qml</file>
     </qresource>
+    <qresource prefix="/control">
+        <file>control/RLineEdit.qml</file>
+    </qresource>
 </RCC>

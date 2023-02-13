@@ -87,6 +87,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <QtRcc Include="qml.qrc" />
+    <None Include="control\RLineEdit.qml" />
     <None Include="main.qml" />
     <QtRcc Include="qrc\Resource.qrc" />
   </ItemGroup>
