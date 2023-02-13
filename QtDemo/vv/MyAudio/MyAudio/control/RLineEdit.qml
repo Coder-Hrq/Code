@@ -2,8 +2,14 @@
 
 Rectangle{
     property string placeholderText: "请输入账号"
+    property string defaultColor: "#32343A"
+    property string borderColor: "#32343A"
+    property string borderHoverColor: "red"
+    property int moustState: 0
     id: rLineEdit
-    color: "#32343A"
+    color: defaultColor
+    border.width: 2
+    border.color: "#32343A"
     radius: 28
     TextInput{
         property int paddingValue: 24
@@ -16,6 +22,7 @@ Rectangle{
         verticalAlignment:  Text.AlignVCenter
         selectByMouse:  true
         clip: true
+        onFocusChanged: focus ? parent.moustState = 1 : parent.moustState = 0
         Text {
             anchors.fill: parent
             text: rLineEdit.placeholderText
@@ -24,6 +31,11 @@ Rectangle{
             verticalAlignment:  parent.verticalAlignment
             font: parent.font
         }
+    }
+
+    onMoustStateChanged: {
+        console.log("onMoustStateChanged" + moustState)
+        border.color=( moustState == 0 ? defaultColor : borderHoverColor)
     }
 }
     
