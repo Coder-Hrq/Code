@@ -1,36 +1,47 @@
 ﻿import QtQuick 2.3
 
 Rectangle{
-    property string placeholderText: "请输入账号"
+    property alias placeholderText: placeholderText.text
     property string defaultColor: "#32343A"
     property string borderColor: "#32343A"
     property string borderHoverColor: "red"
     property int moustState: 0
-    id: rLineEdit
+    property int paddingValue: 24
+    id: root
     color: defaultColor
+    border.color: defaultColor
     border.width: 2
-    border.color: "#32343A"
-    radius: 28
+    radius: height / 2
+
     TextInput{
-        property int paddingValue: 24
-        x: paddingValue
-        width: parent.width - paddingValue * 2
+        x: parent.paddingValue
+        width: (parent.width - paddingValue * 2) - (fold.visible ? fold.width : 0)
         height: parent.height
-        id: mTextInput
+        id: input
         color: "white"
         font.pixelSize: 14
         verticalAlignment:  Text.AlignVCenter
         selectByMouse:  true
+        selectedTextColor: "black"
         clip: true
         onFocusChanged: focus ? parent.moustState = 1 : parent.moustState = 0
         Text {
+            id: placeholderText
             anchors.fill: parent
-            text: rLineEdit.placeholderText
             color: "#99A0A3"
             visible: !parent.text
             verticalAlignment:  parent.verticalAlignment
             font: parent.font
         }
+        selectionColor: "#ff00eec1"
+    }
+    Image{
+        id: fold
+        x: parent.width - width - paddingValue
+        y: (parent.height - height) / 2
+        width: 12
+        height: 12
+        source: "qrc:/common/common/fold.png"
     }
 
     onMoustStateChanged: {

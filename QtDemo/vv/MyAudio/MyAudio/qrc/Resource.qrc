@@ -7,4 +7,7 @@
         <file>login/loginLogo.png</file>
         <file>login/update.png</file>
     </qresource>
+    <qresource prefix="/common">
+        <file>common/fold.png</file>
+    </qresource>
 </RCC>
