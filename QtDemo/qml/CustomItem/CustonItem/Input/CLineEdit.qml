@@ -1,4 +1,4 @@
-﻿import QtQuick 2.3
+import QtQuick 2.3
 
 Rectangle{
     property alias placeholderText: placeholderText.text
@@ -67,4 +67,4 @@ Rectangle{
         border.color=( moustState == 0 ? defaultColor : borderHoverColor)
     }
 }
-    
+

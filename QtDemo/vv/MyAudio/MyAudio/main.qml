@@ -4,12 +4,11 @@ import QtQuick 2.12
 import "./control/control" as RControls 
 
 Window {
-    visible: true
+    visible: false
     width: 1000
     height: 670
     title: qsTr("登录界面")
     id: loginWindow
-
     Rectangle{
         id: leftRect
         anchors.fill: parent
@@ -21,6 +20,7 @@ Window {
             width: 363
             height: 56
             placeholderText: "请输入账号"
+            state: "unfold"
         }
         RControls.RLineEdit{
             x: 73
@@ -28,6 +28,7 @@ Window {
             width: 363
             height: 56
             placeholderText: "请输入密码"
+            state: "invalid"
         }
     }
 
