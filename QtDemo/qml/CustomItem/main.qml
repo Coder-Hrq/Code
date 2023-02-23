@@ -21,7 +21,7 @@ Window {
     Rectangle{
         color: "#D0D0D0"
         height: parent.height
-        width: 300
+        width: 400
 
         TreeView {
             id: rootTree
@@ -42,6 +42,21 @@ Window {
             }
             rowDelegate:Rectangle{
                 height: rootTree.fontSize + 10
+                color: "#EBEBEB"
+                Shape{
+                    anchors.fill: parent
+                    //visible: false
+                    ShapePath{
+                        fillColor: "#EBEBEB"
+                        strokeWidth: 0
+                        strokeColor: "#A0A0A0"
+                        startX: width
+                        startY: 0
+                        PathLine{x: 0; y:0}
+                        PathLine{x: 0; y:height}
+                        PathLine{x: width; y:height}
+                    }
+                }
             }
             itemDelegate: Rectangle {
                 color: "#EBEBEB"
@@ -72,12 +87,12 @@ Window {
             style: TreeViewStyle {
                 branchDelegate: Rectangle {
                     color: "#EBEBEB"
-                    width: rootTree.fontSize + 10
-                    height: rootTree.fontSize + 10
+                    width: 16
+                    height: 16
                     Image{
                         width: 16;height: 16
                         //anchors.horizontalCenter: true
-                        anchors.right: parent.right
+                        anchors.fill: parent
                         y: (parent.height - rootTree.fontSize) / 2
                         source: "/image/arrow.png"
                         rotation: styleData.isExpanded ? 180 : 90
