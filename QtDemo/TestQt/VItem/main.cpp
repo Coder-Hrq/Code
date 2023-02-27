@@ -1,12 +1,12 @@
 #include "VItem.h"
 #include <QtWidgets/QApplication>
-#include "CSingleton.h"
+#include "TestSingleton.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     VItem w;
     w.show();
-    CSingleton::GetInstance();
+    TestSingleton::GetInstance();
     return a.exec();
 }

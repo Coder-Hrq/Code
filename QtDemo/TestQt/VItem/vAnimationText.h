@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QLabel>
+#include "CSingleton.h"
 
 class vAnimationText : public QLabel
 {

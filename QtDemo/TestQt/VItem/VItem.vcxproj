@@ -90,6 +90,7 @@
     <QtUic Include="VItem.ui" />
     <QtMoc Include="VItem.h" />
     <ClCompile Include="CSingleton.cpp" />
+    <ClCompile Include="TestSingleton.cpp" />
     <ClCompile Include="vAnimationText.cpp" />
     <ClCompile Include="VCaptureWidget.cpp" />
     <ClCompile Include="VItem.cpp" />
@@ -103,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CSingleton.h" />
+    <ClInclude Include="TestSingleton.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
