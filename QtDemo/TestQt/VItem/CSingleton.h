@@ -18,31 +18,29 @@ public:\
     static SingletonClass * GetInstance();\
 \
 private:\
-    static SingletonClass *m_pThis;
+    static std::unique_ptr<SingletonClass> m_uniquePtr;
 
 #define CSINGLETION_DEFFINED(SingletonClass) \
-SingletonClass *SingletonClass::m_pThis = nullptr;\
+std::unique_ptr<SingletonClass> SingletonClass::m_uniquePtr;\
 \
-static std::unique_ptr<SingletonClass> m_sharedPtr;\
 \
 SingletonClass::SingletonClass()\
 {\
-    m_sharedPtr = std::unique_ptr<SingletonClass>(this);\
     qInfo() << #SingletonClass"::"#SingletonClass"()";\
 }\
 \
 SingletonClass * SingletonClass::GetInstance()\
 {\
-    if (nullptr == m_pThis)\
+    if (!m_uniquePtr)\
     {\
         static std::mutex mutex;\
         std::lock_guard<std::mutex> locker(mutex);\
-        if (nullptr == m_pThis)\
+        if (!m_uniquePtr)\
         {\
-            m_pThis = new SingletonClass;\
+            m_uniquePtr = std::unique_ptr<SingletonClass>(new SingletonClass);\
         }\
     }\
-    return m_pThis;\
+    return m_uniquePtr.get();\
 }\
 
 //class CSingleton
