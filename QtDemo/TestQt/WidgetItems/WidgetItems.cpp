@@ -75,7 +75,8 @@ WidgetItems::WidgetItems(QWidget *parent)
 
     //测试直接退出程序，vld检测的情况
     connect(ui.pushButton_vld, &QPushButton::clicked, [=]() {
-        abort();
+        QApplication::exit(0);
+        //abort();
         //exit(0);
     });
 }
