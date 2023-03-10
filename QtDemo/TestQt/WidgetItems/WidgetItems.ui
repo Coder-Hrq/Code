@@ -173,6 +173,19 @@ QCalendarWidget QAbstractItemView:!enabled {
      <string>system</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton_vld">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>50</y>
+      <width>91</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>vld</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">

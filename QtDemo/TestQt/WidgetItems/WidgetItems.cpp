@@ -6,6 +6,8 @@
 #include <QTextCharFormat>
 #include <windows.h>
 #include <QFileInfo>
+#include <QSharedPointer>
+#define CSHAREED_POINT(CLASS_NAME, OBJECT_NAME) static QSharedPointer<CLASS_NAME> OBJECT_NAME = QSharedPointer<CLASS_NAME>::create()
 
 WidgetItems::WidgetItems(QWidget *parent)
     : QMainWindow(parent)
@@ -25,11 +27,11 @@ WidgetItems::WidgetItems(QWidget *parent)
 
 
     //VSafeChatModeWidget
-    auto pSafeChatModeWidget = new VSafeChatModeWidget();
-    connect(pSafeChatModeWidget, &VSafeChatModeWidget::sigCheckMsg, [=]() {
+    CSHAREED_POINT(VSafeChatModeWidget, pSafeChatModeWidget);
+    connect(pSafeChatModeWidget.data(), &VSafeChatModeWidget::sigCheckMsg, [=]() {
         QMessageBox::warning(this, "warring", "from msg");
     });
-    connect(pSafeChatModeWidget, &VSafeChatModeWidget::sigLinkActivated, [=]() {
+    connect(pSafeChatModeWidget.data(), &VSafeChatModeWidget::sigLinkActivated, [=]() {
         QMessageBox::warning(this, "warring", "from link");
     });
     connect(ui.pushButton_safeChatMode, &QPushButton::clicked, [=] {
@@ -68,6 +70,13 @@ WidgetItems::WidgetItems(QWidget *parent)
     //测试系统
     connect(ui.pushButton_system, &QPushButton::clicked, [=]() {
         QMessageBox::warning(nullptr, QStringLiteral("提示"), getSystemStr());
+    });
+
+
+    //测试直接退出程序，vld检测的情况
+    connect(ui.pushButton_vld, &QPushButton::clicked, [=]() {
+        abort();
+        //exit(0);
     });
 }
 
