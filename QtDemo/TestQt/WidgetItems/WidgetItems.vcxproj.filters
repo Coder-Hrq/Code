@@ -58,6 +58,9 @@
     <ClCompile Include="VToast.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="VRollLabel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="vColorfulLabel.h">
@@ -78,6 +81,9 @@
     <QtMoc Include="VToast.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="VRollLabel.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="vColorfulLabel.ui">
@@ -96,6 +102,9 @@
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="VToast.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="VRollLabel.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

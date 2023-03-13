@@ -57,6 +57,19 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;啦啦啦啦&lt;a href=&quot;https://www.baidu.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;测试连接&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
+     <widget class="VRollLabel" name="label_roll">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>130</y>
+        <width>54</width>
+        <height>12</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>滚动的文字啦啦啦啦啦啦....</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="page_2">
      <widget class="vColorfulLabel" name="label_2">
@@ -213,6 +226,11 @@ QCalendarWidget QAbstractItemView:!enabled {
    <class>vColorfulLabel</class>
    <extends>QLabel</extends>
    <header>vcolorfullabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>VRollLabel</class>
+   <extends>QLabel</extends>
+   <header>VRollLabel.h</header>
   </customwidget>
  </customwidgets>
  <resources>

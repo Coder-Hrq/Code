@@ -90,6 +90,7 @@
     <QtUic Include="VCheckMsgWidget.ui" />
     <QtUic Include="VCheckOrderWidget.ui" />
     <QtUic Include="vColorfulLabel.ui" />
+    <QtUic Include="VRollLabel.ui" />
     <QtUic Include="VSafeChatModeWidget.ui" />
     <QtUic Include="VToast.ui" />
     <QtUic Include="WidgetItems.ui" />
@@ -98,6 +99,7 @@
     <ClCompile Include="VCheckMsgWidget.cpp" />
     <ClCompile Include="VCheckOrderWidget.cpp" />
     <ClCompile Include="vColorfulLabel.cpp" />
+    <ClCompile Include="VRollLabel.cpp" />
     <ClCompile Include="VSafeChatModeWidget.cpp" />
     <ClCompile Include="VToast.cpp" />
     <ClCompile Include="WidgetItems.cpp" />
@@ -120,6 +122,9 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="VToast.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="VRollLabel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
