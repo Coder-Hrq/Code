@@ -1,6 +1,7 @@
 #include "VRollLabel.h"
 #include <QPainter>
 #include <QPointer>
+#include <QDebug>
 
 VRollLabel::VRollLabel(QWidget *parent)
     : QLabel(parent)
@@ -21,7 +22,7 @@ VRollLabel::VRollLabel(QWidget *parent)
         }
         else
         {
-            m_rectText.adjust(-1, 0, 0, 0);
+            m_rectText.adjust(-2, 0, 0, 0);
             repaint();
         }
     });
@@ -35,6 +36,7 @@ VRollLabel::~VRollLabel()
 void VRollLabel::setText(const QString &str)
 {
     QLabel::setText(str);
+    m_rectText = rect();
     check();
 }
 
@@ -55,6 +57,14 @@ void VRollLabel::check()
 {
     QFontMetrics fm = this->fontMetrics();
     m_textWidth = fm.width(text());
+    if (!isVisible())
+    {
+        if (m_timer.isActive())
+        {
+            m_timer.stop();
+        }
+        return;
+    }
     if (m_textWidth > width())
     {
         if (!m_timer.isActive())
